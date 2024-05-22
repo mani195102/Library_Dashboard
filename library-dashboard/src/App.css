@@ -2,10 +2,10 @@ body {
   margin: 0;
   font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
 }
-*{
+/* *{
   margin: 0px;
   padding: 0px;
-}
+} */
 .sidebar svg path {
   stroke: #fff;
   fill: #fff;
