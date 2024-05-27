@@ -10,6 +10,9 @@ body {
   stroke: #fff;
   fill: #fff;
 }
+html{
+    overflow-x: hidden;
+}
 
 .MuiContainer-root {
   padding-top: 20px;
