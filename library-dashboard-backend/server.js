@@ -1,17 +1,17 @@
-// index.js
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const Author = require('./models/Author');
 const Book = require('./models/Book');
-require("dotenv").config();
-
+require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(bodyParser.json());
+// Middleware
+app.use(bodyParser.json({ limit: '50mb' })); // Adjust limit as per your payload size
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cors());
 
 // MongoDB connection
@@ -22,8 +22,7 @@ connection.once('open', () => {
   console.log('MongoDB database connection established successfully');
 });
 
-// Routes
-// Authors CRUD operations
+// Routes for Authors
 app.get('/authors', (req, res) => {
   Author.find()
     .then(authors => res.json(authors))
@@ -49,7 +48,7 @@ app.delete('/authors/:id', (req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-// Books CRUD operations
+// Routes for Books
 app.get('/books', (req, res) => {
   Book.find()
     .then(books => res.json(books))
