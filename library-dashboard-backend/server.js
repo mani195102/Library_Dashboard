@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const Author = require('./models/Author');
 const Book = require('./models/Book');
+require("dotenv").config();
+
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -13,7 +15,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // MongoDB connection
-const mongoURI = 'mongodb://localhost:27017/library-dash';
+const mongoURI = process.env.MONGODB;
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
 const connection = mongoose.connection;
 connection.once('open', () => {
