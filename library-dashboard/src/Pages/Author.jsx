@@ -13,7 +13,7 @@ const Authors = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/authors')
+    axios.get('https://library-dashboard.onrender.com/authors')
       .then(response => {
         setAuthors(response.data);
         setLoading(false);
@@ -37,7 +37,7 @@ const Authors = () => {
 
   const handleAuthorSubmit = (values) => {
     if (selectedAuthor) {
-      axios.put(`http://localhost:5000/authors/${selectedAuthor.id}`, values)
+      axios.put(`https://library-dashboard.onrender.com/authors/${selectedAuthor.id}`, values)
         .then(response => {
           setAuthors(authors.map(author => author.id === selectedAuthor.id ? response.data : author));
           handleClose();
@@ -47,7 +47,7 @@ const Authors = () => {
           setError('Failed to update author');
         });
     } else {
-      axios.post('http://localhost:5000/authors', { ...values, id: uuidv4() })
+      axios.post('https://library-dashboard.onrender.com/authors', { ...values, id: uuidv4() })
         .then(response => {
           setAuthors([...authors, response.data]);
           handleClose();
@@ -60,7 +60,7 @@ const Authors = () => {
   };
 
   const handleDelete = (id) => {
-    axios.delete(`http://localhost:5000/authors/${id}`)
+    axios.delete(`https://library-dashboard.onrender.com/authors/${id}`)
       .then(() => setAuthors(authors.filter(author => author.id !== id)))
       .catch(error => {
         console.error('Error deleting author:', error);
