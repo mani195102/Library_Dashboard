@@ -3,7 +3,6 @@ import AuthorForm from './AuthorForm';
 import { Table, TableBody, TableCell, TableHead, TableRow, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Snackbar } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';  // Import uuidv4
 
 const Authors = () => {
   const [authors, setAuthors] = useState([]);
@@ -13,6 +12,10 @@ const Authors = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    fetchAuthors();
+  }, []);
+
+  const fetchAuthors = () => {
     axios.get('https://library-dashboard.onrender.com/authors')
       .then(response => {
         setAuthors(response.data);
@@ -23,7 +26,7 @@ const Authors = () => {
         setError('Failed to fetch authors');
         setLoading(false);
       });
-  }, []);
+  };
 
   const handleOpen = (author) => {
     setSelectedAuthor(author);
@@ -37,9 +40,10 @@ const Authors = () => {
 
   const handleAuthorSubmit = (values) => {
     if (selectedAuthor) {
-      axios.put(`https://library-dashboard.onrender.com/authors/${selectedAuthor.id}`, values)
+      // Update existing author
+      axios.put(`https://library-dashboard.onrender.com/authors/${selectedAuthor._id}`, values)
         .then(response => {
-          setAuthors(authors.map(author => author.id === selectedAuthor.id ? response.data : author));
+          setAuthors(authors.map(author => author._id === selectedAuthor._id ? response.data : author));
           handleClose();
         })
         .catch(error => {
@@ -47,7 +51,8 @@ const Authors = () => {
           setError('Failed to update author');
         });
     } else {
-      axios.post('https://library-dashboard.onrender.com/authors', values) // Send values here
+      // Add new author
+      axios.post('https://library-dashboard.onrender.com/authors', values)
         .then(response => {
           setAuthors([...authors, response.data]);
           handleClose();
@@ -58,11 +63,12 @@ const Authors = () => {
         });
     }
   };
-  
 
   const handleDelete = (id) => {
     axios.delete(`https://library-dashboard.onrender.com/authors/${id}`)
-      .then(() => setAuthors(authors.filter(author => author.id !== id)))
+      .then(() => {
+        setAuthors(authors.filter(author => author._id !== id));
+      })
       .catch(error => {
         console.error('Error deleting author:', error);
         setError('Failed to delete author');
@@ -94,7 +100,7 @@ const Authors = () => {
                 <TableCell><img src={author.image} alt={author.name} width="100" /></TableCell>
                 <TableCell>
                   <IconButton onClick={() => handleOpen(author)}><EditIcon /></IconButton>
-                  <IconButton onClick={() => handleDelete(author.id)}><DeleteIcon /></IconButton>
+                  <IconButton onClick={() => handleDelete(author._id)}><DeleteIcon /></IconButton>
                 </TableCell>
               </TableRow>
             ))}

@@ -23,7 +23,7 @@ const Home = () => {
 
   const handleAuthorSubmit = (values, { resetForm }) => {
     if (selectedAuthor) {
-      axios.put(`http://localhost:5000/authors/${selectedAuthor.id}`, values)
+      axios.put(`https://library-dashboard.onrender.com/authors/${selectedAuthor.id}`, values)
         .then(response => {
           setAuthors(authors.map(author => author.id === selectedAuthor.id ? response.data : author));
           setSnackbarMessage('Author updated successfully');
@@ -40,7 +40,7 @@ const Home = () => {
           setSnackbarOpen(true);
         });
     } else {
-      axios.post('http://localhost:5000/authors', { ...values, id: uuidv4() })
+      axios.post('https://library-dashboard.onrender.com/authors', values)
         .then(response => {
           setAuthors([...authors, response.data]);
           setSnackbarMessage('Author added successfully');
@@ -61,7 +61,7 @@ const Home = () => {
 
   const handleBookSubmit = (values, { resetForm }) => {
     if (selectedBook) {
-      axios.put(`http://localhost:5000/books/${selectedBook.id}`, values)
+      axios.put(`https://library-dashboard.onrender.com/books/${selectedBook.id}`, values)
         .then(response => {
           setBooks(books.map(book => book.id === selectedBook.id ? response.data : book));
           setSnackbarMessage('Book updated successfully');
@@ -78,7 +78,7 @@ const Home = () => {
           setSnackbarOpen(true);
         });
     } else {
-      axios.post('http://localhost:5000/books', { ...values, id: uuidv4() })
+      axios.post('https://library-dashboard.onrender.com/books',values)
         .then(response => {
           setBooks([...books, response.data]);
           setSnackbarMessage('Book added successfully');

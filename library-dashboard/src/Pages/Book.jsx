@@ -3,7 +3,6 @@ import BookForm from './BookForm';
 import { Table, TableBody, TableCell, TableHead, TableRow, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Snackbar } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';  // Import uuidv4
 
 const Books = () => {
   const [books, setBooks] = useState([]);
@@ -13,6 +12,10 @@ const Books = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    fetchBooks();
+  }, []);
+
+  const fetchBooks = () => {
     axios.get('https://library-dashboard.onrender.com/books')
       .then(response => {
         setBooks(response.data);
@@ -23,7 +26,7 @@ const Books = () => {
         setError('Failed to fetch books');
         setLoading(false);
       });
-  }, []);
+  };
 
   const handleOpen = (book) => {
     setSelectedBook(book);
@@ -37,9 +40,10 @@ const Books = () => {
 
   const handleBookSubmit = (values) => {
     if (selectedBook) {
-      axios.put(`https://library-dashboard.onrender.com/books/${selectedBook.id}`, values)
+      // Update existing book
+      axios.put(`https://library-dashboard.onrender.com/books/${selectedBook._id}`, values)
         .then(response => {
-          setBooks(books.map(book => book.id === selectedBook.id ? response.data : book));
+          setBooks(books.map(book => book._id === selectedBook._id ? response.data : book));
           handleClose();
         })
         .catch(error => {
@@ -47,7 +51,8 @@ const Books = () => {
           setError('Failed to update book');
         });
     } else {
-      axios.post('https://library-dashboard.onrender.com/books', { ...values, id: uuidv4() })
+      // Add new book
+      axios.post('https://library-dashboard.onrender.com/books', values)
         .then(response => {
           setBooks([...books, response.data]);
           handleClose();
@@ -60,8 +65,10 @@ const Books = () => {
   };
 
   const handleDelete = (id) => {
-    axios.delete(`https://library-dashboard.onrender.comhttp://localhost:5000/books/${id}`)
-      .then(() => setBooks(books.filter(book => book.id !== id)))
+    axios.delete(`https://library-dashboard.onrender.com/books/${id}`)
+      .then(() => {
+        setBooks(books.filter(book => book._id !== id));
+      })
       .catch(error => {
         console.error('Error deleting book:', error);
         setError('Failed to delete book');
@@ -93,7 +100,7 @@ const Books = () => {
                 <TableCell>{book.publicationDate}</TableCell>
                 <TableCell>
                   <IconButton onClick={() => handleOpen(book)}><EditIcon /></IconButton>
-                  <IconButton onClick={() => handleDelete(book.id)}><DeleteIcon /></IconButton>
+                  <IconButton onClick={() => handleDelete(book._id)}><DeleteIcon /></IconButton>
                 </TableCell>
               </TableRow>
             ))}
