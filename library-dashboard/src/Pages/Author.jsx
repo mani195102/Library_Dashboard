@@ -47,7 +47,7 @@ const Authors = () => {
           setError('Failed to update author');
         });
     } else {
-      axios.post('https://library-dashboard.onrender.com/authors', { ...values, id: uuidv4() })
+      axios.post('https://library-dashboard.onrender.com/authors', values) // Send values here
         .then(response => {
           setAuthors([...authors, response.data]);
           handleClose();
@@ -58,6 +58,7 @@ const Authors = () => {
         });
     }
   };
+  
 
   const handleDelete = (id) => {
     axios.delete(`https://library-dashboard.onrender.com/authors/${id}`)
